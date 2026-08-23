@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bell Lap — Mid-Distance Training</title>
+<style>
+:root{
+  /* Spoto High School (Riverview, FL) — Spartans: purple / black / grey */
+  --bg:#0c0a10; --panel:#17131e; --panel2:#201a29; --line:#362b45;
+  --ink:#ede9f4; --dim:#a89bbd; --faint:#6f6180;
+  --accent:#8b3ce0; --accent2:#c9c2d6;
+  --e:#4ba3f5; --t:#2ec27e; --cv:#f2b705; --i:#ff8a3d; --r:#ff4d6d; --sub:#29c2b6;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 90px}
+header{border-bottom:1px solid var(--line);background:linear-gradient(180deg,#1d1628,#0c0a10);position:sticky;top:0;z-index:50}
+.hrow{max-width:1180px;margin:0 auto;padding:13px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.5px;display:flex;align-items:center;gap:9px}
+.logo .ring{width:22px;height:14px;border:2.5px solid var(--accent);border-radius:99px;display:inline-block}
+nav{margin-left:auto;display:flex;gap:2px;background:var(--panel);padding:3px;border-radius:9px;border:1px solid var(--line);flex-wrap:wrap}
+nav button{background:none;border:0;color:var(--dim);font:600 13px/1 inherit;padding:8px 12px;border-radius:7px;cursor:pointer}
+nav button.on{background:var(--accent);color:#fff}
+nav button:disabled{opacity:.35;cursor:not-allowed}
+h2{font-size:22px;margin:28px 0 4px;letter-spacing:-.4px}
+h3{font-size:17px;margin:26px 0 8px;letter-spacing:-.3px}
+.sub{color:var(--dim);font-size:13.5px;margin:0 0 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px}
+label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin-bottom:6px;font-weight:700}
+input,select{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:10px 11px;font:15px/1 inherit}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.hint{font-size:11.5px;color:var(--faint);margin-top:5px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:14px 24px;font:700 15px/1 inherit;cursor:pointer;width:100%;max-width:340px}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);padding:9px 15px;font-size:13px;width:auto}
+.methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px}
+.m{background:var(--panel2);border:1.5px solid var(--line);border-radius:11px;padding:14px;cursor:pointer;transition:.12s}
+.m:hover{border-color:var(--faint)}
+.m.on{border-color:var(--accent);background:#271a38}
+.m h4{margin:0 0 5px;font-size:14.5px}
+.m p{margin:0;font-size:12px;color:var(--dim);line-height:1.45}
+.m .req{margin-top:9px;font-size:10.5px;color:var(--accent2);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.m.locked{opacity:.45}
+.meetrow{display:grid;grid-template-columns:1fr 130px 120px 36px;gap:9px;margin-bottom:8px;align-items:end}
+.x{background:var(--panel2);border:1px solid var(--line);color:var(--dim);border-radius:8px;height:39px;cursor:pointer;font-size:16px}
+.paces{display:grid;grid-template-columns:repeat(auto-fit,minmax(122px,1fr));gap:9px}
+.p{background:var(--panel2);border:1px solid var(--line);border-left-width:3px;border-radius:9px;padding:11px}
+.p .k{font-size:10.5px;font-weight:800;letter-spacing:.7px;text-transform:uppercase}
+.p .v{font-family:var(--mono);font-size:17px;font-weight:700;margin:4px 0 1px}
+.p .s{font-size:11px;color:var(--faint);font-family:var(--mono)}
+.p .d{font-size:10.5px;color:var(--dim);margin-top:5px;line-height:1.35}
+.phasebar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:14px 0 6px}
+.phasebar div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:.5px;color:#0c0a10;text-transform:uppercase;overflow:hidden;white-space:nowrap}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);padding:8px 9px;border-bottom:1px solid var(--line)}
+td{padding:9px;border-bottom:1px solid #291f35;vertical-align:middle}
+tr.wk{cursor:pointer}
+tr.wk:hover td{background:var(--panel2)}
+tr.meetwk td{background:#1f1728}
+.bar{height:7px;background:var(--accent);border-radius:9px;min-width:3px}
+.chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 7px;border-radius:5px;letter-spacing:.5px;text-transform:uppercase}
+.mono{font-family:var(--mono)}
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.day{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:13px;min-height:132px;cursor:pointer;transition:.12s}
+.day:hover{border-color:var(--faint)}
+.day.q{border-left:3px solid var(--accent)}
+.day.rest{opacity:.5}
+.day .dn{font-size:10.5px;font-weight:800;color:var(--faint);letter-spacing:.8px;text-transform:uppercase}
+.day .tt{font-size:14px;font-weight:700;margin:7px 0 5px;line-height:1.3}
+.day .dd{font-size:11.5px;color:var(--dim);font-family:var(--mono);line-height:1.5}
+.day .mi{font-size:11px;color:var(--faint);margin-top:8px}
+.rep{display:grid;grid-template-columns:34px 1fr 92px 92px;gap:10px;padding:9px 11px;border-bottom:1px solid #291f35;align-items:center;font-size:13.5px}
+.rep:last-child{border:0}
+.rep .n{color:var(--faint);font-family:var(--mono);font-size:12px}
+.rep .tgt{font-family:var(--mono);font-weight:700;text-align:right}
+.rep .rst{font-family:var(--mono);color:var(--dim);text-align:right;font-size:12.5px}
+.seg{background:var(--panel2);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:11px}
+.seg h5{margin:0;padding:9px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.9px;color:var(--dim);background:#1c1624;border-bottom:1px solid var(--line)}
+.note{background:#1c1624;border-left:3px solid var(--accent2);border-radius:0 9px 9px 0;padding:12px 14px;font-size:13px;color:var(--dim);line-height:1.6}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:9px;margin-bottom:16px}
+.kpi{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px}
+.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--faint);font-weight:700}
+.kpi .v{font-size:18px;font-weight:800;font-family:var(--mono);margin-top:3px}
+.warn{background:#2c1c3a;border:1px solid #6d3f8f;border-radius:9px;padding:12px 14px;font-size:12.5px;color:#e9d9ff;line-height:1.55}
+.hide{display:none}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:760px){.two,.three{grid-template-columns:1fr}.meetrow{grid-template-columns:1fr 1fr}.rep{grid-template-columns:26px 1fr 74px 74px;gap:6px;font-size:12.5px}}
+.back{background:none;border:0;color:var(--dim);cursor:pointer;font:600 13px/1 inherit;padding:0;margin:22px 0 0}
+.doc{max-width:760px}
+.doc p{color:var(--dim);font-size:14px}
+.doc code{font-family:var(--mono);font-size:12.5px;background:var(--panel2);padding:2px 6px;border-radius:5px;color:var(--ink)}
+.doc pre{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:13px;overflow-x:auto;font-family:var(--mono);font-size:12.5px;color:var(--ink);line-height:1.6}
+.doc ul{color:var(--dim);font-size:14px;padding-left:20px}
+.doc li{margin-bottom:7px}
+.doc b{color:var(--ink)}
+</style>
+</head>
+<body>
+
+<header><div class="hrow">
+  <div class="logo"><span class="ring"></span>Bell&nbsp;Lap</div>
+  <nav>
+    <button id="n1" class="on" onclick="go(1)">Setup</button>
+    <button id="n2" onclick="go(2)" disabled>Season</button>
+    <button id="n3" onclick="go(3)" disabled>Week</button>
+    <button id="n4" onclick="go(4)" disabled>Workout</button>
+    <button id="n5" onclick="go(5)">How it works</button>
+  </nav>
+</div></header>
+
+<div class="wrap">
+
+<!-- ================= 1 SETUP ================= -->
+<section id="s1">
+  <h2>Build your season</h2>
+  <p class="sub">Training plans for the 800, 1600, 3200 and 5K — built backward from your championship meet. Fill this in once and you'll get every workout, with paces, for the whole season.</p>
+
+  <div class="warn" style="margin-bottom:16px">
+    <b>Read this first.</b> If you have a coach, their workouts win. Use this to understand what you're doing and why, to fill in the days your team doesn't program, or to plan an off-season. Don't run two plans at once — that's how people get hurt. And if something hurts in a way that changes how you run, stop and tell someone. No workout here is worth a season.
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="three">
+      <div><label>Your main event</label>
+        <select id="ev">
+          <option value="800">800m</option>
+          <option value="1600" selected>1600m / Mile</option>
+          <option value="3200">3200m / 2 Mile</option>
+          <option value="5000">5000m</option>
+        </select>
+        <div class="hint" id="evHint"></div>
+      </div>
+      <div><label>Second event (optional)</label>
+        <select id="ev2">
+          <option value="">— none —</option>
+          <option value="800">800m</option>
+          <option value="1600">1600m / Mile</option>
+          <option value="3200">3200m / 2 Mile</option>
+          <option value="5000">5000m</option>
+        </select>
+        <div class="hint">If you double, the plan balances speed and endurance differently.</div>
+      </div>
+      <div><label>Days per week you run</label>
+        <select id="dpw"><option>4</option><option>5</option><option selected>6</option><option>7</option></select>
+        <div class="hint">Be honest here, not aspirational.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h4 style="margin:0 0 3px;font-size:14px">Your fitness</h4>
+    <p class="hint" style="margin:0 0 14px">Two numbers, not one. A distance race tells us your aerobic fitness. A flat sprint tells us your speed. Most training apps only ask for the first one, which is why they're bad at the 800.</p>
+    <div class="three">
+      <div><label>Best recent distance race</label>
+        <select id="seedD"><option value="1600">1600m</option><option value="3200" selected>3200m</option><option value="5000">5000m</option><option value="8000">5K XC / 8000m</option></select>
+      </div>
+      <div><label>Time (mm:ss)</label><input id="seedT" value="11:20" placeholder="11:20">
+        <div class="hint">Recent and honest beats old and flattering.</div></div>
+      <div><label>Flat 200m or 400m PR</label>
+        <div style="display:flex;gap:8px">
+          <select id="spD" style="width:88px"><option value="200">200m</option><option value="400" selected>400m</option></select>
+          <input id="spT" value="57.5" placeholder="57.5">
+        </div>
+        <div class="hint">A rough estimate is fine.</div>
+      </div>
+    </div>
+    <div class="three" style="margin-top:14px">
+      <div><label>Miles per week right now</label><input id="vol" type="number" value="32"></div>
+      <div><label>Most you want to run in a week</label><input id="peak" type="number" value="45">
+        <div class="hint">A hard ceiling, not a target — the plan won't cross it, and won't camp on it either.</div></div>
+      <div><label>Season starts</label><input id="start" type="date"></div>
+    </div>
+    <div style="margin-top:14px;max-width:340px">
+      <label>Longest you want a single session to take</label>
+      <select id="maxSess">
+        <option value="0" selected>No limit</option>
+        <option value="45">45 min</option>
+        <option value="60">60 min</option>
+        <option value="75">75 min</option>
+        <option value="90">90 min</option>
+      </select>
+      <div class="hint">Trims reps — never rest or pace — so a session fits the time you actually have. Warm-up, drills and cool-down are counted in the estimate.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h4 style="margin:0 0 3px;font-size:14px">Heart rate</h4>
+    <p class="hint" style="margin:0 0 14px">This is the part that keeps easy days actually easy. The pace math alone will hand you an "easy" pace that's too fast — almost every plan does. Heart rate catches that. If you don't know these numbers yet, skip them; the plan still works, just less precisely.</p>
+    <div class="three">
+      <div><label>Threshold HR (LTHR)</label><input id="lthr" type="number" value="" placeholder="e.g. 178">
+        <div class="hint">Your average HR over the last 20 min of a hard 30-min run. Ask your coach before you test this alone.</div></div>
+      <div><label>Max HR</label><input id="hrmax" type="number" value="" placeholder="e.g. 200">
+        <div class="hint">Highest number you've actually seen on a watch.</div></div>
+      <div><label>Resting HR</label><input id="hrrest" type="number" value="" placeholder="e.g. 48">
+        <div class="hint">Measured lying down, before you get up. This one matters more than you'd think.</div></div>
+    </div>
+    <div class="three" style="margin-top:14px">
+      <div><label>Easy-run HR ceiling (optional)</label><input id="hrcap" type="number" value="" placeholder="worked out for you">
+        <div class="hint">Only fill this in if you already know yours.</div></div>
+    </div>
+    <div id="hrpreview" style="margin-top:13px"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h4 style="margin:0 0 3px;font-size:14px">Paces you already know</h4>
+    <p class="hint" style="margin:0 0 14px">The paces below get worked out from your race time, which is a decent guess but only a guess. If you already know what you actually hold in a workout, put it here — real beats estimated. Leave blank to use the estimate. Enter per mile (<span class="mono">6:20</span>) or per 400 (<span class="mono">95</span>).</p>
+    <div class="three">
+      <div><label>Sub-threshold / LT1</label><input id="pSUB" placeholder="estimate"></div>
+      <div><label>Threshold / LT2</label><input id="pT" placeholder="estimate"></div>
+      <div><label>Interval / VO₂</label><input id="pI" placeholder="estimate"></div>
+    </div>
+    <div class="three" style="margin-top:14px">
+      <div><label>Rep / speed pace</label><input id="pR" placeholder="estimate"></div>
+      <div><label>Units</label><select id="pUnit"><option value="mi">per mile</option><option value="400">per 400m</option></select></div>
+    </div>
+    <div id="paceadj" style="margin-top:13px"></div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h4 style="margin:0 0 3px;font-size:14px">Your PRs</h4>
+    <p class="hint" style="margin:0 0 14px">Goal times move every week as you get fitter, and they'll never be set slower than something you've already run.</p>
+    <div class="three">
+      <div><label>800m PR</label><input id="pr800" placeholder="optional"></div>
+      <div><label>1600m PR</label><input id="pr1600" placeholder="optional"></div>
+      <div><label>3200m PR</label><input id="pr3200" placeholder="optional"></div>
+    </div>
+    <div class="three" style="margin-top:14px">
+      <div><label>5000m PR</label><input id="pr5000" placeholder="optional"></div>
+      <div><label>How long you've been training</label><select id="tage">
+        <option value="1.5">First or second season</option>
+        <option value="1.0" selected>2–4 seasons</option>
+        <option value="0.65">Been at this a while</option></select>
+        <div class="hint">Newer runners improve faster. This changes what the plan projects.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <h4 style="margin:0 0 3px;font-size:14px">Your meets</h4>
+    <p class="hint" style="margin:0 0 14px">Mark which ones actually matter. The plan is built backward from your <b>A</b> meet — everything else either gets trained through or gets a small taper.</p>
+    <div id="meets"></div>
+    <button class="btn ghost" onclick="addMeet()">+ Add meet</button>
+  </div>
+
+  <div class="card" style="margin-bottom:18px">
+    <h4 style="margin:0 0 3px;font-size:14px">How you want to train</h4>
+    <p class="hint" style="margin:0 0 14px">These are real, named training systems that serious runners argue about. Each one builds a genuinely different week. Read the "How it works" tab if you want the reasoning before you pick.</p>
+    <div class="methods" id="methods"></div>
+    <div id="methodNote" style="margin-top:13px"></div>
+  </div>
+
+  <button class="btn" onclick="build()">Build my season →</button>
+</section>
+
+<!-- ================= 2 SEASON ================= -->
+<section id="s2" class="hide">
+  <h2 id="s2h">Season plan</h2>
+  <p class="sub" id="s2sub"></p>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h4 style="margin:0 0 2px;font-size:14px">Your training paces</h4>
+    <p class="hint" style="margin:0 0 13px" id="vdotline"></p>
+    <div class="paces" id="paces"></div>
+    <div id="hrbox" style="margin-top:13px"></div>
+    <div id="asrbox" style="margin-top:13px"></div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin:0 0 2px;font-size:14px">Your season, week by week</h4>
+    <p class="hint" style="margin:0">Tap any week to see the actual workouts. Notice the goal times drop and the workouts grow — that's the plan progressing, not just repeating.</p>
+    <div class="phasebar" id="phasebar"></div>
+    <div style="max-height:520px;overflow:auto;margin-top:12px">
+      <table><thead><tr><th style="width:40px">Wk</th><th style="width:74px">Date</th><th>Phase</th><th>Focus / progression</th><th style="width:78px">VDOT</th><th style="width:74px">Goal</th><th style="width:110px">Volume</th><th style="width:124px">Meet</th></tr></thead>
+      <tbody id="weeks"></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 WEEK ================= -->
+<section id="s3" class="hide">
+  <h2 id="s3h">Week</h2>
+  <p class="sub" id="s3sub"></p>
+  <div id="weekwarn"></div>
+  <div class="days" id="days" style="margin-top:14px"></div>
+  <button class="back" onclick="go(2)">← back to season</button>
+</section>
+
+<!-- ================= 4 WORKOUT ================= -->
+<section id="s4" class="hide">
+  <h2 id="s4h">Workout</h2>
+  <p class="sub" id="s4sub"></p>
+  <div class="kpis" id="wkpis"></div>
+  <div id="wbody"></div>
+  <button class="back" onclick="go(3)">← back to week</button>
+</section>
+
+<!-- ================= 5 HOW IT WORKS ================= -->
+<section id="s5" class="hide">
+<div class="doc">
+  <h2>How this works</h2>
+  <p class="sub">Nothing here is magic and none of it is hidden. If you disagree with a number, you should be able to find out exactly where it came from and argue with it.</p>
+
+  <h3>1. Turning one race into all your paces</h3>
+  <p>Everything starts with <b>VDOT</b> — a single fitness number from Jack Daniels' <i>Running Formula</i>. It comes from two equations. The first says how much oxygen it costs to run at a given speed:</p>
+  <pre>VO₂ = −4.60 + 0.182258·v + 0.000104·v²        (v in metres/min)</pre>
+  <p>The second says what fraction of your maximum you can hold for a given duration — you can hold a bigger fraction for 5 minutes than for 30:</p>
+  <pre>%max = 0.8 + 0.1894·e^(−0.01278·t) + 0.2990·e^(−0.19326·t)   (t in minutes)</pre>
+  <p>Divide one by the other and you get VDOT. Run it backward and you get equivalent times at every other distance. This engine was checked against the published tables: VDOT 50 gives a 5K of 19:56 against 19:57 in the book, threshold 6:51/mi, and 400m reps at 1:27 — all matching.</p>
+  <p>Your zones are then percentages of VDOT:</p>
+  <ul>
+    <li><b>E — Easy</b> (70%) — 70 to 80% of your weekly mileage lives here</li>
+    <li><b>Sub-T</b> (85.5%) — LT1, roughly 2.0–2.5 mmol/L lactate</li>
+    <li><b>T — Threshold</b> (88%) — about what you could race for an hour</li>
+    <li><b>CV — Critical Velocity</b> (92.5%) — between threshold and interval</li>
+    <li><b>I — Interval</b> (99%) — around 3K–5K pace, reps of 3–5 minutes</li>
+    <li><b>R — Repetition</b> (107%) — mile pace, for speed and running economy</li>
+  </ul>
+
+  <h3>2. Why the 800 gets its own math</h3>
+  <p>Daniels never meant VDOT for the 800 and said so — it's roughly a third anaerobic, and aerobic math can't see that. Two runners with identical VDOT can be ten seconds apart over 800m depending purely on how fast they are flat out.</p>
+  <p>So this uses your sprint time to work out your <b>anaerobic speed reserve</b> — the gap between the fastest you can run and the fastest you can run aerobically:</p>
+  <pre>ASR   = v_max − v_VO₂max
+v800  ≈ v_VO₂max + 0.34 × ASR</pre>
+  <p>Two athletes, both VDOT 50: one with a 26.0s 200 projects to 2:26, one with a 30.0s 200 projects to 2:36. Plain VDOT says 2:43 for both, which is wrong for both.</p>
+  <p><b>Honest caveat:</b> that 0.34 is taken from the research but hasn't been tested on enough real runners to be trusted precisely. Treat the 800 number as a ballpark, not a promise.</p>
+
+  <h3>3. Why easy pace is set by heart rate</h3>
+  <p>This is the single most useful thing in here. The pace math will hand you an "easy" pace that's genuinely too fast to be easy — Daniels' easy zone is a wide band (59–74% of max) and the single derived number sits near the quick end of it. Run that every day and your easy days quietly become medium days, which is the most common way to train hard and improve slowly.</p>
+  <p>So heart rate sets the ceiling. Your cap comes from two anchors, and the more conservative one wins:</p>
+  <pre>cap = min( 0.78 × LTHR , 0.715 × HRmax )</pre>
+  <p>Then pace is worked out from oxygen cost, not from a heart-rate ratio. The relationship <code>%HRR = %VO₂R</code> is the one HR/oxygen link with real validation behind it, and the curve is bent so it passes exactly through <i>your</i> measured threshold rather than an average person's:</p>
+  <pre>%HRR(h)  = (h − HRrest) / (HRmax − HRrest)
+r        = %HRR(h) / %HRR(LTHR)
+VO₂(h)   = VO₂rest + r × %VO₂R(threshold) × (VDOT − VO₂rest)
+pace(h)  = solve VO₂ equation for v</pre>
+  <p>This is why resting HR matters. Same runner, same threshold, different resting HR:</p>
+  <pre>resting 40 → easy 8:05 – 9:13/mi
+resting 48 → easy 8:13 – 9:30/mi
+resting 56 → easy 8:24 – 9:50/mi
+resting 64 → easy 8:36 – 10:16/mi</pre>
+  <p>A 31 second per mile spread between runners a simpler model would hand identical paces.</p>
+  <p>The result gets checked back against Daniels' 59–74% easy range. If your cap lands outside it, the app tells you rather than quietly using a bad number.</p>
+  <p><b>Heart rate governs easy and long runs only.</b> On reps under about two minutes HR lags too far behind effort to be useful — chase it there and you'll start too fast and finish too slow. Quality sessions go by pace.</p>
+
+  <h3>4. How the season is shaped</h3>
+  <p>The plan is built <b>backward from your championship meet</b>, not forward from today. Taper gets protected first, then the event-specific block, then the support block, and base training absorbs whatever's left:</p>
+  <pre>taper = 1 week if season ≤ 6 weeks, else 2
+spec  = 35% of what remains  (1–6 weeks)
+sup   = 30% of what remains  (0–6 weeks)
+base  = everything left over</pre>
+  <p>Mileage starts exactly where you are now and climbs 8%/week in base, 6%/week in support, dropping to about 78% every fourth week to let you absorb it. Once the specific phase starts, mileage <b>holds</b> rather than keeps climbing — intensity carries the load from there, not more miles. It never crosses the ceiling you set, and if it reaches that ceiling early it backs off about 7% after two weeks rather than parking there — the number you enter is a limit, not a level to live at.</p>
+  <p>Your meets get handled by priority:</p>
+  <ul>
+    <li><b>C — train through.</b> The race replaces that week's workout. It doesn't get added on top.</li>
+    <li><b>B — small taper.</b> Two workouts come out, mileage stays.</li>
+    <li><b>A — championship.</b> Full taper, about 55% of peak mileage, one sharpener, rest day before.</li>
+  </ul>
+
+  <h3>5. Why the plan changes every week</h3>
+  <p>A plan that repeats the same session for six weeks isn't a plan, it's a calendar. Two separate things move:</p>
+  <p><b>Your projected fitness rises.</b> VDOT follows an S-curve that peaks at your championship — slow at first because adaptation lags training, steepest mid-season, flattening into the taper:</p>
+  <pre>gain = 2.5 × trainingAge × √(weeks/12) × √(peak/40) × ceiling
+V(i) = V₀ + gain × ½(1 − cos(π · i/(n−1)))</pre>
+  <p>Newer runners improve faster, longer seasons yield more, higher mileage yields more, and it gets harder the fitter you already are. Every pace and goal time in the plan is recalculated from that week's number.</p>
+  <p><b>The workouts themselves grow.</b> Within each phase: one rep added every second week (capped at +40%), rest shrinking 6% per step (floored at 55% of where it started), and pace tightening on its own as fitness rises. Down weeks and taper weeks step backward on purpose. Every set tells you what changed and why.</p>
+  <pre>wk 9  5×1000m @ 3:28  rest 180s  [baseline]
+wk10  5×1000m @ 3:28  rest 169s  [−11s rest]
+wk11  6×1000m @ 3:27  rest 158s  [+1 rep, −22s rest]
+wk12  4×1000m @ 3:26  rest 180s  [down week]</pre>
+
+  <h3>6. About goal times</h3>
+  <p>Goal times come from your projected fitness that week, and they're <b>never set slower than a PR you've actually run</b>. If your projection hasn't caught up to your PR yet, the plan holds at your PR until it does.</p>
+  <p>Understand what these are: projections, not promises. They're built from population averages about how much runners improve, and you're one person, not a population. If you beat them, the model was conservative. If you miss them, the model was optimistic — that is information about the model, not a verdict on you. Put your real results back in and everything recalculates.</p>
+
+  <h3>7. What this doesn't know</h3>
+  <ul>
+    <li><b>Heat and humidity.</b> Not modelled yet. On a hot day your HR cap will slow you down more than the pace chart suggests — that's the cap doing its job, so trust it over the pace.</li>
+    <li><b>Sleep, stress, school, illness.</b> None of it. A plan is a hypothesis, not an instruction.</li>
+    <li><b>Your actual results.</b> Nothing you run feeds back in automatically yet. Update your inputs when you race.</li>
+    <li><b>Whether today is a good day to push.</b> Only you know that. The abort criteria on each workout exist for a reason — when reps fall more than 2–3% off target, the session is done. Finishing a workout that's already fallen apart trains the wrong thing.</li>
+  </ul>
+
+  <h3>8. Where the training models come from</h3>
+  <ul>
+    <li><b>Daniels VDOT</b> — Jack Daniels, <i>Daniels' Running Formula</i></li>
+    <li><b>Norwegian Singles &amp; Double Threshold</b> — Marius Bakken's lactate-threshold model, built over two decades and 5,500+ lactate tests, and the training the Ingebrigtsen brothers are known for</li>
+    <li><b>Lydiard Progression</b> — Arthur Lydiard's sequential blocks: conditioning, hills, anaerobic, coordination</li>
+    <li><b>Tinman CV</b> — Tom Schwartz's critical-velocity approach</li>
+  </ul>
+  <p style="margin-top:22px;color:var(--faint);font-size:13px">Built as a prototype. The math is checked and the reasoning is above — but it's a tool, not a coach, and it doesn't know you. Use it with someone who does.</p>
+</div>
+<button class="back" onclick="go(1)">← back to setup</button>
+</section>
+
+</div>
+
+<script>
+/* ============ PACE ENGINE (Daniels VDOT, verified vs published tables) ============ */
+const vo2=v=>-4.60+0.182258*v+0.000104*v*v;
+const pctMax=t=>0.8+0.1894393*Math.exp(-0.012778*t)+0.2989558*Math.exp(-0.1932605*t);
+function vdot(d,s){const t=s/60;return vo2(d/t)/pctMax(t);}
+function equiv(d,V){let lo=5,hi=40000;for(let i=0;i<120;i++){const m=(lo+hi)/2;vdot(d,m)>V?lo=m:hi=m;}return (lo+hi)/2;}
+function vFromVO2(x){const a=0.000104,b=0.182258,c=-4.60-x;return (-b+Math.sqrt(b*b-4*a*c))/(2*a);} // m/min
+function vAt(V,p){return vFromVO2(p*V);}
+function fmt(s){s=Math.round(s);const m=Math.floor(s/60),x=s%60;const h=Math.floor(m/60);
+  return h?`${h}:${String(m%60).padStart(2,'0')}:${String(x).padStart(2,'0')}`:`${m}:${String(x).padStart(2,'0')}`;}
+function fmt1(s){return s<60?s.toFixed(1):fmt(s);}
+function parseT(v){v=(v||'').trim();if(v.includes(':')){const p=v.split(':').map(Number);return p.length===3?p[0]*3600+p[1]*60+p[2]:p[0]*60+p[1];}return parseFloat(v)||0;}
+const perMi=v=>fmt(1609.344/v*60), per400=v=>fmt(400/v*60);
+const secFor=(v,m)=>m/v*60;                     // v m/min -> seconds for m metres
+const PCT={E:.70,M:.84,T:.88,SUB:.855,CV:.925,I:.99,R:1.07};
+// warm-up/cool-down jog, in miles: scales gently with weekly volume but never balloons —
+// a track warm-up doesn't need to be 3+ miles just because the week's mileage is high
+const wuMiles=mi=>Math.max(1,Math.min(2.2,Math.round(mi*0.05*10)/10));
+
+/* ============ HR GOVERNOR + PACE MODEL ============
+   Cap: two anchors, more conservative wins; explicit override beats both.
+     cap_LTHR = 0.78 x LTHR      cap_HRmax = 0.715 x HRmax
+
+   Pace at a given HR. Preferred model uses %HRR = %VO2R (ACSM) - the one
+   HR/VO2 relationship with real validation behind it - and is then re-anchored
+   so the curve passes exactly through the athlete's MEASURED (LTHR, vT) point.
+   No fitted constant, and it responds to resting HR, which a %HRmax or
+   threshold-only model cannot.
+
+     %HRR(h)   = (h - HRrest) / (HRmax - HRrest)
+     %VO2R(vT) = (VO2(vT) - VO2rest) / (VDOT - VO2rest)
+     r         = %HRR(h) / %HRR(LTHR)                  <- anchor correction
+     VO2(h)    = VO2rest + r x %VO2R(vT) x (VDOT - VO2rest)
+     v(h)      = vFromVO2(VO2(h))
+
+   Fallback when HRmax or resting HR are missing: threshold-anchored linear with
+   K = 1.0. Explicitly lower confidence, and the UI says which model is running.
+
+   Output is a BAND (floor..cap), not a point, plus the resulting %VDOT so the
+   prescription can be checked against Daniels' E range of 59-74%.               */
+const K_HR=1.0, CAP_LTHR=0.78, CAP_HRMAX=0.715, VO2REST=3.5, E_LO=0.59, E_HI=0.74;
+
+function hrModel(lthr,hrmax,hrrest,override,V){
+  if(!lthr||lthr<=0) return null;
+  const vT=vAt(V,PCT.T);
+  const fromL=CAP_LTHR*lthr, fromM=hrmax>0?CAP_HRMAX*hrmax:Infinity;
+  const cap=override>0?override:Math.min(fromL,fromM);
+  const floor=cap*0.88;
+
+  const full = hrmax>hrrest && hrrest>0;
+  let vAtHR;
+  if(full){
+    const pHRR=x=>(x-hrrest)/(hrmax-hrrest);
+    const pVO2R_T=(vo2(vT)-VO2REST)/(V-VO2REST);
+    const denom=pHRR(lthr);
+    vAtHR=h=>vFromVO2(Math.max(VO2REST+0.5, VO2REST + (pHRR(h)/denom)*pVO2R_T*(V-VO2REST)));
+  } else {
+    vAtHR=h=>vT*(1-K_HR*(1-h/lthr));
+  }
+  const vFast=vAtHR(cap), vSlow=vAtHR(floor), vMid=(vFast+vSlow)/2;
+  const pct=vo2(vFast)/V;
+  return {lthr,hrmax:hrmax||0,hrrest:hrrest||0,cap:Math.round(cap),floor:Math.round(floor),
+    fromL:Math.round(fromL), fromM:isFinite(fromM)?Math.round(fromM):0,
+    source: override>0?'your override':(fromL<=fromM?'78% of LTHR':'71.5% of HR max'),
+    model: full?'%HRR ≈ %VO₂R, re-anchored on measured threshold':'threshold-anchored linear (add HR max + resting HR to upgrade)',
+    full, vFast, vSlow, vMid, pct,
+    flag: pct<E_LO?'low':(pct>E_HI?'high':'ok')};
+}
+function easyV(V,hr){return hr?hr.vFast:vAt(V,PCT.E);}   // ceiling of the easy band
+function easyMid(V,hr){return hr?hr.vMid:vAt(V,PCT.E);}  // mid-band, for duration estimates
+
+/* ============ FITNESS PROGRESSION ============
+   A season is not a flat prescription. Projected VDOT rises on an S-curve that
+   reaches its peak at the championship, so paces tighten and goal times drop
+   week over week.
+
+   Total season gain scales with training age (novice gains most), season length,
+   volume, and diminishing returns at higher VDOT. These are planning estimates,
+   not promises, and the UI labels them as projections.                          */
+function seasonGain(V0,nw,peak,tage){
+  const len=Math.sqrt(Math.min(nw,24)/12), vol=Math.sqrt(Math.min(peak,70)/40);
+  const ceiling=Math.max(0.35,Math.min(1.3,1-(V0-45)/60));   // harder to improve when already fit
+  return 2.5*tage*len*vol*ceiling;
+}
+// S-curve: slow start (adaptation lag), steepest mid-season, plateaus into the taper
+function gainCurve(i,nw){
+  const x=Math.min(1,i/Math.max(1,nw-1));
+  return 0.5*(1-Math.cos(Math.PI*x));
+}
+const vdotAtWeek=(V0,gain,i,nw)=>V0+gain*gainCurve(i,nw);
+
+/* user-supplied paces anchor their zone; ratio carries forward as fitness rises */
+function zoneV(V,k,adj){return vAt(V,PCT[k])*((adj&&adj[k])||1);}
+
+/* goal time: projected from this week's fitness, but never slower than a real PR */
+function goalFor(ev,V,prs,adj){
+  const proj=equiv(+ev,V);
+  const pr=prs&&prs[ev]>0?prs[ev]:0;
+  if(!pr) return {t:proj,src:'projected'};
+  return proj<=pr?{t:proj,src:'projected'}:{t:pr,src:'PR floor'};
+}
+
+/* ============ STATE ============ */
+let S={}, PLAN=null, curWeek=0, curDay=0;
+
+const METHODS={
+  daniels:{n:'Daniels VDOT',d:'Speed work early for economy, VO₂ intervals mid-season, threshold and race-pace sharpening late. The classic.',req:null,
+    q:2,note:'The safest starting point. Well documented, forgiving of mistakes, and every pace traces back to a published table you can look up.'},
+  norwegian:{n:'Norwegian Singles',d:'Frequent sub-threshold running at LT1 (~2.0–2.5 mmol/L), one session a day. Lots of weekly time near race effort without wrecking yourself.',req:'35+ mi per week',min:35,
+    q:3,note:'The whole idea is restraint. The way people ruin this is running the sub-threshold sessions too fast — being 15–20s/mi slower than threshold IS the workout, not a rounding error.'},
+  double:{n:'Double Threshold',d:'Two threshold sessions in one day, twice a week. AM long reps at ~2.0–2.5 mmol/L, PM shorter reps at ~3.0–3.5 mmol/L.',req:'50+ mi per week · 7 days',min:50,days:7,
+    q:2,note:'This is what Jakob Ingebrigtsen does. It works, and it needs a real mileage base plus room for two runs a day. Stays locked until you have both — not to gatekeep, just because doing it early gets people hurt.'},
+  lydiard:{n:'Lydiard Progression',d:'Aerobic conditioning → hill resistance → anaerobic development → coordination → peak. Sequential blocks, not concurrent.',req:null,
+    q:2,note:'Great with a long runway, poor for a short indoor season. The blocks run one after another and need roughly 20+ weeks to do their thing.'},
+  tinman:{n:'Tinman CV',d:'Critical velocity emphasis (~92–93% vVO₂max) as the aerobic workhorse, with short fast reps kept crisp and separate.',req:null,
+    q:2,note:'Sits between threshold and interval. Good if hard VO₂ sessions blow you up but easy running alone leaves you flat.'}
+};
+
+/* ---------- meets ---------- */
+let meets=[];
+function addMeet(nm,dt,ty){
+  meets.push({nm:nm||'',dt:dt||'',ty:ty||'B'}); drawMeets();
+}
+function drawMeets(){
+  document.getElementById('meets').innerHTML=meets.map((m,i)=>`
+   <div class="meetrow">
+    <div><label${i?' style="display:none"':''}>Meet name</label><input value="${m.nm}" oninput="meets[${i}].nm=this.value"></div>
+    <div><label${i?' style="display:none"':''}>Date</label><input type="date" value="${m.dt}" onchange="meets[${i}].dt=this.value"></div>
+    <div><label${i?' style="display:none"':''}>Priority</label><select onchange="meets[${i}].ty=this.value">
+      <option value="C"${m.ty=='C'?' selected':''}>C · train through</option>
+      <option value="B"${m.ty=='B'?' selected':''}>B · small taper</option>
+      <option value="A"${m.ty=='A'?' selected':''}>A · championship</option></select></div>
+    <button class="x" onclick="meets.splice(${i},1);drawMeets()">×</button>
+   </div>`).join('');
+}
+
+/* ---------- live HR preview ---------- */
+function drawHR(){
+  const g=id=>+document.getElementById(id).value;
+  const box=document.getElementById('hrpreview'); if(!box)return;
+  const lthr=g('lthr');
+  if(!lthr){box.innerHTML=`<div class="warn"><b>No heart rate set.</b> Without your threshold HR the plan falls back to a pace estimate that is usually too fast to be genuinely easy. Easy days are the most commonly botched sessions in any plan, and this one input is what prevents it.</div>`;return;}
+  const seedD=+document.getElementById('seedD').value, seedT=parseT(document.getElementById('seedT').value);
+  if(!seedT){box.innerHTML='';return;}
+  const V=vdot(seedD,seedT), h=hrModel(lthr,g('hrmax'),g('hrrest'),g('hrcap'),V);
+  const vd=vAt(V,PCT.E);
+  const flagTxt={low:`<b style="color:var(--accent2)">Below Daniels' easy range (${(E_LO*100)|0}–${(E_HI*100)|0}% VO₂max).</b> Your cap may be so low it is not driving much adaptation — worth re-checking your threshold HR.`,
+                 high:`<b style="color:var(--r)">Above Daniels' easy range.</b> This is not actually easy running. Re-check your threshold HR.`,
+                 ok:`Lands inside Daniels' easy range (${(E_LO*100)|0}–${(E_HI*100)|0}% VO₂max), so your easy days are genuinely easy.`}[h.flag];
+  box.innerHTML=`<div class="note"><b>Easy cap ${h.cap} bpm</b> (${h.source}) · band <span class="mono">${h.floor}–${h.cap} bpm</span>
+    ${h.fromM?`<br><span style="color:var(--faint)">Anchors: 78% LTHR = ${h.fromL}, 71.5% HR max = ${h.fromM} — conservative wins.</span>`:''}
+    <br><br><b>Easy pace <span class="mono">${perMi(h.vFast)} – ${perMi(h.vSlow)}/mi</span></b>
+    &nbsp;<span style="color:var(--faint)">(VDOT alone would say ${perMi(vd)}/mi)</span>
+    <br><br>Model: ${h.model}. Intensity at the cap is <b>${(h.pct*100).toFixed(1)}% VO₂max</b>. ${flagTxt}
+    ${h.full?'':'<br><br><b style="color:var(--accent2)">Add HR max and resting HR</b> to switch from the linear fallback to the %HRR model.'}</div>`;
+}
+
+/* ---------- methodology cards ---------- */
+let method='daniels';
+function drawMethods(){
+  const vol=+document.getElementById('vol').value||0, dpw=+document.getElementById('dpw').value;
+  document.getElementById('methods').innerHTML=Object.entries(METHODS).map(([k,m])=>{
+    const lockVol=m.min&&vol<m.min, lockDay=m.days&&dpw<m.days, lock=lockVol||lockDay;
+    return `<div class="m ${method==k?'on':''} ${lock?'locked':''}" onclick="${lock?'':`method='${k}';drawMethods()`}">
+      <h4>${m.n}</h4><p>${m.d}</p>${m.req?`<div class="req">${lock?'needs ':''}${m.req}</div>`:''}</div>`;
+  }).join('');
+  const m=METHODS[method];
+  document.getElementById('methodNote').innerHTML=`<div class="note"><b>${m.n}.</b> ${m.note}</div>`;
+}
+
+/* ---------- phase planner ---------- */
+function phasesFor(nw,ev,meth){
+  // allocate back-to-front: taper is protected first, then specific, then support; base absorbs the remainder
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+  const taper = nw<=6?1:2;
+  let rem = nw-taper;
+  let spec = clamp(Math.round(rem*0.35),1,6);
+  let sup  = clamp(Math.round(rem*0.30),0,6);
+  let base = rem-spec-sup;
+  while(base<1 && sup>0){sup--;base++;}          // sacrifice support first
+  while(base<1 && spec>1){spec--;base++;}        // then specific, never below 1
+  base=Math.max(base,0);
+  const L={daniels:['Base · E + strides','Repetition · economy','Interval · VO₂max','Sharpen & peak'],
+           norwegian:['Base · aerobic volume','Sub-T introduction','Sub-T + specific speed','Sharpen & peak'],
+           double:['Base · aerobic volume','Single threshold build','Double threshold','Sharpen & peak'],
+           lydiard:['Aerobic conditioning','Hill resistance','Anaerobic development','Coordination & peak'],
+           tinman:['Base · E + strides','CV development','CV + VO₂ specific','Sharpen & peak']}[meth];
+  const C=['#4ba3f5','#2ec27e','#ff8a3d','#ff4d6d'];
+  const out=[];[base,sup,spec,taper].forEach((len,i)=>{for(let j=0;j<len;j++)out.push({ph:i,name:L[i],c:C[i]});});
+  return out.slice(0,nw);
+}
+
+/* ---------- volume curve ----------
+   Peak is a CEILING you set, not a target the plan lives at. Base and support
+   ramp toward it; the specific phase holds rather than continuing to climb —
+   intensity is carrying the load by then, not more miles. And if the ramp
+   reaches the ceiling early, the plan eases back ~7% after two weeks parked
+   there instead of sitting at your hard max indefinitely.                    */
+function volumeCurve(n,start,peakV,phases){
+  const out=[]; let v=start, atCeil=0;
+  const peakIdx=phases.findIndex(p=>p.ph===3);
+  for(let i=0;i<n;i++){
+    const p=phases[i].ph;
+    if(p<3){
+      const down = i>0 && (i+1)%4===0;
+      if(i>0 && p<2){ const ramp=p===0?.08:.06; v=Math.min(peakV, v*(1+ramp)); }  // base/support only — specific phase holds
+      if(!down){ if(v>=peakV-0.5) atCeil++; else atCeil=0; if(atCeil>2){ v=peakV*0.93; atCeil=0; } } // don't camp at the ceiling
+      out.push({mi:Math.round(down?v*.78:v),down});
+    } else {
+      const k=i-peakIdx; out.push({mi:Math.round(v*(k===0?.75:.55)),down:false,taper:true});
+    }
+  }
+  return out;
+}
+
+/* ---------- workout library ---------- */
+function reps(n,dist,v,rest,label,tag){return {n,dist,tgt:secFor(v,dist),rest,label,tag};}
+
+function sessionsFor(phase,meth,ev,V,W,vol,adj){
+  const P={}; for(const k in PCT) P[k]=zoneV(V,k,adj);
+  const sprinty = ev==='800';
+  const S=[];
+  const iRep = sprinty?600:(ev==='1600'?800:1000);
+  const rRep = sprinty?200:400;
+
+  if(meth==='norwegian'){
+    if(phase===0){ S.push(mk('Sub-T intro','sub',[reps(5,1000,P.SUB,60,'sub-threshold','sub')],'Should feel comfortably hard — you can talk in short phrases, not sentences.'));
+                   S.push(mk('Hills + strides','r',[reps(8,200,P.R*1.02,90,'hill @ R effort','r')],'Hills build force while being easier on your legs than flat sprinting.')); }
+    else if(phase===1){ S.push(mk('AM-style long sub-T','sub',[reps(6,1600,P.SUB,60,'sub-threshold','sub')],'The longest sub-threshold block of your week.'));
+                        S.push(mk('Short sub-T','sub',[reps(20,400,P.SUB*1.02,30,'sub-threshold','sub')],'Short 30s recovery. The short rest is the point — it keeps lactate flat.'));
+                        S.push(mk('Speed touch','r',[reps(6,rRep,P.R,180,'rep pace','r')],'Take full recovery. This is about speed and form, not getting tired.')); }
+    else if(phase===2){ S.push(mk('Sub-T + specific','sub',[reps(4,1600,P.SUB,60,'sub-threshold','sub'),reps(4,400,P.I,90,'@ VO₂','i')],'Aerobic block, then a fast finish on tired legs.'));
+                        S.push(mk('Short sub-T','sub',[reps(25,400,P.SUB*1.02,30,'sub-threshold','sub')],'Lots of work at intensity without the damage.'));
+                        S.push(mk('Race-pace reps',ev==='800'?'r':'i',[reps(sprinty?6:5,sprinty?300:600,sprinty?P.R:P.I,sprinty?240:180,'race pace','r')],'Stop before your form falls apart.')); }
+    else { S.push(mk('Sharpener','i',[reps(4,300,P.R,180,'@ race pace','r')],'Touch race pace, leave the fatigue behind.')); }
+  }
+  else if(meth==='double'){
+    if(phase===0){ S.push(mk('Threshold','t',[reps(4,1600,P.T,60,'threshold','t')],'One session for now. Building tolerance before you start doubling.'));
+                   S.push(mk('Hills','r',[reps(10,200,P.R*1.02,90,'hill','r')],'')); }
+    else if(phase===1){ S.push(mk('Threshold','t',[reps(5,1600,P.T,60,'threshold','t')],''));
+                        S.push(mk('Short threshold','t',[reps(15,400,P.T*1.03,45,'threshold','t')],''));
+                        S.push(mk('Speed','r',[reps(8,rRep,P.R,180,'rep','r')],'')); }
+    else if(phase===2){ // AM/PM volume scales with the week's actual mileage instead of a fixed rep
+                        // count, and is hard-capped so neither session runs away at high volume
+                        const amDist=2000, pmDist=400;
+                        const amMi=Math.max(2.5,Math.min(4.5,vol*0.085)), pmMi=Math.max(2,Math.min(3.5,vol*0.06));
+                        const amN=Math.max(3,Math.round(amMi*1609.344/amDist)), pmN=Math.max(10,Math.round(pmMi*1609.344/pmDist));
+                        S.push(mk('AM — long reps','sub',[reps(amN,amDist,P.SUB,60,'~2.0–2.5 mmol/L','sub')],'Morning session. Hold back on purpose — this is the aerobic half of the day.',{ampm:'AM'}));
+                        S.push(mk('PM — short reps','t',[reps(pmN,pmDist,P.T*1.03,30,'~3.0–3.5 mmol/L','t')],'Evening session, same day. Faster but shorter, so it stays controlled.',{ampm:'PM'}));
+                        S.push(mk('Specific','i',[reps(sprinty?5:6,iRep,P.I,180,'@ VO₂max','i')],'The only genuinely hard day of the week. Respect it.')); }
+    else { S.push(mk('Sharpener','i',[reps(4,300,P.R,180,'race pace','r')],'')); }
+  }
+  else if(meth==='tinman'){
+    if(phase===0){ S.push(mk('CV intro','cv',[reps(6,800,P.CV,60,'critical velocity','cv')],'CV sits between threshold and interval pace.'));
+                   S.push(mk('Strides + hills','r',[reps(10,150,P.R,90,'strides','r')],'')); }
+    else if(phase===1){ S.push(mk('CV workhorse','cv',[reps(8,1000,P.CV,60,'critical velocity','cv')],''));
+                        S.push(mk('Short fast','r',[reps(10,rRep,P.R,150,'rep','r')],'Keep it crisp and separate from the CV work.')); }
+    else if(phase===2){ S.push(mk('CV + VO₂','cv',[reps(4,1000,P.CV,60,'CV','cv'),reps(4,400,P.I,90,'VO₂','i')],''));
+                        S.push(mk('Specific','i',[reps(sprinty?6:5,sprinty?400:800,sprinty?P.R:P.I,sprinty?240:180,'specific','i')],'')); }
+    else { S.push(mk('Sharpener','r',[reps(5,200,P.R,180,'race pace','r')],'')); }
+  }
+  else if(meth==='lydiard'){
+    if(phase===0){ S.push(mk('Aerobic time trial','t',[reps(1,4800,P.T*1.02,0,'steady aerobic','t')],'Sustained aerobic effort. Not a race.'));
+                   S.push(mk('Fartlek','cv',[reps(10,400,P.CV,60,'surge','cv')],'')); }
+    else if(phase===1){ S.push(mk('Hill resistance','r',[reps(12,200,P.R*1.03,120,'steep hill','r')],'Think springing, not grinding. Builds elastic strength.'));
+                        S.push(mk('Steady state','t',[reps(1,6400,P.T*1.03,0,'steady','t')],'')); }
+    else if(phase===2){ S.push(mk('Anaerobic development','i',[reps(sprinty?8:6,sprinty?400:800,P.I,180,'@ VO₂max','i')],'The hardest block of the year. It is supposed to feel like that.'));
+                        S.push(mk('Time trial','r',[reps(1,sprinty?600:1200,P.R,0,'time trial','r')],'A short time trial to see where your sharpening is at.')); }
+    else { S.push(mk('Coordination','r',[reps(6,200,P.R,180,'fast/relaxed','r')],'Alternate fast and float. Sharpening, not stressing.')); }
+  }
+  else { // daniels
+    if(phase===0){ S.push(mk('Easy + strides','r',[reps(8,100,P.R,60,'strides','r')],'Strides are form work, not a workout. Fast and relaxed.'));
+                   S.push(mk('Threshold intro','t',[reps(3,1600,P.T,60,'threshold','t')],'')); }
+    else if(phase===1){ S.push(mk('R — economy','r',[reps(sprinty?10:8,rRep,P.R,sprinty?200:180,'R pace','r')],'Full recovery between reps. Quality over accumulation.'));
+                        S.push(mk('T — threshold','t',[reps(4,1600,P.T,60,'threshold','t')],'')); }
+    else if(phase===2){ S.push(mk('I — VO₂max','i',[reps(sprinty?6:5,iRep,P.I,180,'@ VO₂max','i')],'Reps of 3–5 minutes give you the most time at VO₂max.'));
+                        S.push(mk('T — threshold','t',[reps(5,1600,P.T,60,'threshold','t')],''));
+                        S.push(mk('R — speed','r',[reps(8,rRep,P.R,180,'R pace','r')],'')); }
+    else { S.push(mk('Race sharpener','r',[reps(4,300,P.R,240,'race pace','r')],'')); }
+  }
+  return S;
+}
+function mk(name,tag,sets,note,extra){return Object.assign({name,tag,sets,note:note||''},extra||{});}
+
+/* ---------- within-phase progression ----------
+   Periodization changes WHAT you do between phases. Progression changes HOW MUCH
+   within a phase. Without it the same session repeats for six weeks and the plan
+   stops being a plan.
+
+   Levers, applied by week-within-phase:
+     volume   +1 rep every 2nd week (capped at +40% of the base prescription)
+     density  rest shrinks 6% per step, floored at 55% of the base rest
+     intensity carried automatically by the rising weekly VDOT
+   Down weeks and taper weeks step BACK rather than forward.                     */
+function progressSets(sets,step,down,taper){
+  const s=Math.max(0,step);
+  return sets.map(r=>{
+    if(taper) return Object.assign({},r,{n:Math.max(2,Math.round(r.n*0.6)),prog:'taper — volume cut'});
+    if(down)  return Object.assign({},r,{n:Math.max(2,r.n-1),prog:'down week — one rep back'});
+    const addN=r.n>=6?Math.floor(s/2):(s>=2?1:0);
+    const n=Math.min(Math.ceil(r.n*1.4), r.n+addN);
+    const rest=Math.max(Math.round(r.rest*0.55), Math.round(r.rest*(1-0.06*s)));
+    const changed=[]; if(n>r.n)changed.push('+'+(n-r.n)+' rep'+(n-r.n>1?'s':''));
+    if(rest<r.rest&&r.rest>0)changed.push('−'+(r.rest-rest)+'s rest');
+    return Object.assign({},r,{n,rest,prog:changed.join(', ')||'baseline'});
+  });
+}
+
+/* ---------- session time cap ----------
+   Reps are the lever, never rest or pace — those are prescribed for the physiological
+   zone and cutting them defeats the point. Estimates warm-up + 8min drills + cool-down
+   + main-set time against the athlete's cap and trims reps off the largest set(s),
+   never below 2, until it fits (or it can't go any lower).                          */
+function capToTime(sets,capMin,wuMi,Epace){
+  if(!capMin) return sets;
+  const capSec=capMin*60, fixed=8*60+secFor(Epace,wuMi*1609.344)*2;
+  let out=sets.map(r=>Object.assign({},r));
+  const total=()=>fixed+out.reduce((a,r)=>a+r.n*(r.tgt+r.rest),0);
+  let trimmed=false, guard=0;
+  while(total()>capSec && guard++<200){
+    let bi=-1,bn=2;
+    out.forEach((r,i)=>{ if(r.n>bn){bn=r.n;bi=i;} });
+    if(bi<0) break;
+    out[bi]={...out[bi],n:out[bi].n-1}; trimmed=true;
+  }
+  if(trimmed) out=out.map(r=>Object.assign({},r,{prog:(r.prog&&r.prog!=='baseline'?r.prog+', ':'')+`trimmed to fit ${capMin} min`}));
+  return out;
+}
+/* actual mileage of a session as prescribed: main-set distance + its own warm-up/cool-down */
+function sessMiles(s,wuMi){ return s.sets.reduce((a,r)=>a+r.n*r.dist,0)/1609.344 + wuMi*2; }
+
+/* goal time for an event in a given week: projected from that week's fitness,
+   ASR-adjusted for the 800, and floored at any PR the athlete has actually run */
+function weekGoal(ev,wi){
+  const w=PLAN.weeks[wi], V=w.V;
+  let proj;
+  if(ev==='800'&&PLAN.ASR>0){
+    const vVO2=vAt(V,1.0)/60;                       // rises with projected fitness
+    proj=800/(vVO2+0.34*PLAN.ASR);
+  } else proj=equiv(+ev,V);
+  const pr=S.prs&&S.prs[ev]>0?S.prs[ev]:0;
+  if(!pr) return {t:proj,src:'projected',pr:0};
+  return proj<=pr?{t:proj,src:'projected',pr}:{t:pr,src:'PR floor',pr};
+}
+
+/* ---------- week builder ---------- */
+function buildWeek(wi){
+  const w=PLAN.weeks[wi], V=w.V, ev=S.ev;              // this week's projected fitness
+  const dpw=S.dpw, mi=w.vol.mi;
+  const hr=w.hr;
+  const P={}; for(const k in PCT) P[k]=zoneV(V,k,S.adj);
+  P.E=easyV(V,hr);                                     // HR governor applies to aerobic days
+  const wuMi=wuMiles(mi);
+  let sess=sessionsFor(w.phase.ph,S.method,ev,V,w,mi,S.adj)
+    .map(s=>Object.assign({},s,{sets:progressSets(s.sets,w.step,w.vol.down,w.vol.taper)}));
+  if(S.maxSess) sess=sess.map(s=>Object.assign({},s,{sets:capToTime(s.sets,S.maxSess,wuMi,P.E)}));
+
+  // double threshold: AM + PM are the same calendar day, several hours apart —
+  // merge them into one day entry instead of letting them land on separate days
+  const merged=[];
+  for(let k=0;k<sess.length;k++){
+    const cur=sess[k];
+    if(cur.ampm==='AM' && sess[k+1] && sess[k+1].ampm==='PM'){
+      merged.push({name:'Double threshold',tag:'t',double:true,am:cur,pm:sess[k+1],
+        note:'Two sessions, same day, several hours apart. If the evening one feels harder than the morning one, the morning was run too fast.'});
+      k++;
+    } else merged.push(cur);
+  }
+  sess=merged;
+
+  const names=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const days=names.map(n=>({d:n,type:'rest'}));
+  const meetDay=5;                                   // meets land Saturday
+
+  // which weekdays are run this week
+  let running={7:[0,1,2,3,4,5,6],6:[0,1,2,3,5,6],5:[1,2,3,5,6],4:[1,3,5,6]}[dpw].slice();
+  if(w.meet){
+    if(running.includes(4)){                          // rest the day before the race
+      running=running.filter(x=>x!==4);
+      const add=[6,0,2,1,3].find(x=>!running.includes(x));
+      if(add!==undefined) running.push(add);
+    }
+    if(!running.includes(meetDay)) running.push(meetDay);
+    running=[...new Set(running)].sort((a,b)=>a-b);
+    while(running.length>dpw){const drop=running.find(x=>x!==meetDay);running=running.filter(x=>x!==drop);}
+    days[meetDay]={d:'Sat',type:'race',title:`${w.meet.nm||'Meet'} — ${ev}m`,
+      sub:`${w.meet.ty==='A'?'Championship':w.meet.ty==='B'?'B race · mini-taper':'C race · train through'}`,
+      detail:`Goal ${fmt(weekGoal(ev,wi).t)}`};
+  }
+
+  // quality placement: spaced days, never the race day, always leaving one aerobic day free
+  const slots=[1,3,5,0,2,4,6].filter(x=>running.includes(x)&&!(w.meet&&x===meetDay));
+  const maxQ=Math.max(1,slots.length-1);
+  let qCount = w.meet&&w.meet.ty!=='C' ? Math.max(1,sess.length-2) : (w.vol.down?Math.max(1,sess.length-1):sess.length);
+  sess=sess.slice(0,Math.min(qCount,maxQ));
+
+  const summarize=x=>x.sets.map(r=>`${r.n>1?r.n+'×':''}${r.dist>=1600&&r.dist%1600===0?(r.dist/1600)+'mi':r.dist+'m'}`).join(' + ');
+  let si=0;
+  slots.forEach(i=>{
+    if(si<sess.length){
+      const s=sess[si++];
+      if(s.double){
+        days[i]={d:names[i],type:'q',tag:'t',title:'Double threshold',sess:s,
+          sub:`AM ${summarize(s.am)} + PM ${summarize(s.pm)}`,
+          detail:`${fmt1(s.am.sets[0].tgt/(s.am.sets[0].dist/400))}/400 → ${fmt1(s.pm.sets[0].tgt/(s.pm.sets[0].dist/400))}/400`};
+      } else {
+        days[i]={d:names[i],type:'q',tag:s.tag,title:s.name,sess:s,
+          sub:summarize(s),
+          detail:s.sets.map(r=>`@ ${fmt1(r.tgt/(r.dist/400))}/400`)[0]};
+      }
+    } else days[i]={d:names[i],type:'easy',title:'Easy run',
+        sub:hr?`${perMi(hr.vFast)}–${perMi(hr.vSlow)}/mi`:`${perMi(P.E)}/mi`,
+        detail:hr?`${hr.floor}–${hr.cap} bpm`:'Conversational effort'};
+  });
+  // long run — promoted from an existing easy day, never added as an extra day
+  const easyIdx=days.map((d,i)=>d.type==='easy'?i:-1).filter(i=>i>=0);
+  if(easyIdx.length){
+    const lr = easyIdx.includes(6)?6:(easyIdx.includes(5)?5:easyIdx[easyIdx.length-1]);
+    // long runs: hold the HR cap and let pace decay — cardiac drift is expected, not a failure
+    const lrMiles=Math.round(mi*0.22);
+    days[lr]={d:names[lr],type:'long',title:'Long run',
+      sub:hr?`${lrMiles} mi · open ${perMi(hr.vMid)}, close ${perMi(hr.vSlow*0.97)}`:`${lrMiles} mi @ ${perMi(P.E)}/mi`,
+      detail:hr?`Hold ≤ ${hr.cap} bpm — pace decays, that's the point`:'Steady aerobic effort'};
+  }
+  // distribute mileage, then reconcile rounding drift against the weekly target
+  const qMi=Math.round(mi*0.16), lrMi=Math.round(mi*0.22);
+  let used=0, cnt=0;
+  days.forEach(d=>{
+    if(d.type==='q'){
+      // real mileage from the actual prescribed sets, not the generic quality-day estimate —
+      // a double-threshold day is two sessions and needs its own warm-up/cool-down each
+      const est=d.sess.double?sessMiles(d.sess.am,wuMi)+sessMiles(d.sess.pm,wuMi):sessMiles(d.sess,wuMi);
+      d.mi=Math.round(est); used+=d.mi;
+    } else if(d.type==='race'){d.mi=qMi;used+=qMi;}
+    else if(d.type==='long'){d.mi=lrMi;used+=lrMi;}
+    else if(d.type==='easy')cnt++;
+  });
+  days.forEach(d=>{ if(d.type==='easy') d.mi=Math.max(3,Math.round((mi-used)/Math.max(1,cnt))); });
+  let drift=mi-days.reduce((a,d)=>a+(d.mi||0),0);
+  const adj=days.filter(d=>d.type==='easy'||d.type==='long');
+  for(let k=0;drift!==0&&adj.length&&k<400;k++){
+    const d=adj[k%adj.length]; const step=drift>0?1:-1;
+    if(d.mi+step>=3){d.mi+=step;drift-=step;}
+  }
+  return days;
+}
+
+/* ============ BUILD ============ */
+function build(){
+  const g=id=>document.getElementById(id).value;
+  S={ev:g('ev'),ev2:g('ev2'),dpw:+g('dpw'),vol:+g('vol'),peak:+g('peak'),method,start:g('start'),maxSess:+g('maxSess')||0};
+  const seedD=+g('seedD'), seedT=parseT(g('seedT'));
+  if(!seedT){alert('Enter a seed time like 11:20');return;}
+  if(!S.start){alert('Pick a season start date');return;}
+  const valid=meets.filter(m=>m.dt).sort((a,b)=>a.dt<b.dt?-1:1);
+  if(!valid.length){alert('Add at least one meet with a date');return;}
+  const champ=valid.filter(m=>m.ty==='A').pop()||valid[valid.length-1];
+
+  const V=vdot(seedD,seedT);
+  S.hr=hrModel(+g('lthr'),+g('hrmax'),+g('hrrest'),+g('hrcap'),V);
+  const spD=+g('spD'), spT=parseT(g('spT'));
+  const vVO2=vAt(V,1.0)/60, vMax=spT?spD/spT:0, ASR=vMax-vVO2;
+  const est800 = ASR>0 ? 800/(vVO2+0.34*ASR) : equiv(800,V);
+
+  // user-supplied paces anchor their zone as a ratio against the derived value
+  const unit=g('pUnit');
+  const toV=v=>{const s=parseT(v); if(!s)return 0; return unit==='mi'?1609.344/(s/60):400/(s/60);};
+  S.adj={}; const userPace={};
+  ['SUB','T','I','R'].forEach(k=>{
+    const uv=toV(g('p'+k));
+    if(uv>0){S.adj[k]=uv/vAt(V,PCT[k]); userPace[k]=uv;}
+  });
+  // PRs
+  S.prs={}; ['800','1600','3200','5000'].forEach(e=>{const t=parseT(g('pr'+e)); if(t)S.prs[e]=t;});
+
+  // fitness progression across the season
+  const d0=new Date(S.start+'T12:00'), dC=new Date(champ.dt+'T12:00');
+  const nw=Math.max(4,Math.round((dC-d0)/6048e5)+1);
+  const tage=+g('tage');
+  const gain=seasonGain(V,nw,S.peak,tage);
+  const phases=phasesFor(nw,S.ev,S.method);
+  const vols=volumeCurve(nw,S.vol,S.peak,phases);
+
+  const weeks=[]; let phStart=0;
+  for(let i=0;i<nw;i++){
+    const ws=new Date(d0); ws.setDate(ws.getDate()+i*7);
+    const we=new Date(ws); we.setDate(we.getDate()+6);
+    const mt=valid.find(m=>{const d=new Date(m.dt+'T12:00');return d>=ws&&d<=we;});
+    if(i>0&&phases[i].ph!==phases[i-1].ph) phStart=i;      // progression resets each phase
+    const Vw=vdotAtWeek(V,gain,i,nw);
+    weeks.push({i,ws,we,phase:phases[i],vol:vols[i],meet:mt,V:Vw,step:i-phStart,
+      hr:hrModel(+g('lthr'),+g('hrmax'),+g('hrrest'),+g('hrcap'),Vw)});
+  }
+  PLAN={V0:V,V,weeks,champ,nw,est800,ASR,vVO2,vMax,seedD,seedT,gain,tage,userPace,
+        Vend:weeks[nw-1].V};
+
+  renderSeason(); go(2);
+}
+
+/* ============ RENDER ============ */
+function renderSeason(){
+  const V=PLAN.V, ev=S.ev;
+  document.getElementById('s2h').textContent=`${PLAN.nw}-week season → ${PLAN.champ.nm||'Championship'}`;
+  document.getElementById('s2sub').textContent=`${METHODS[S.method].n} · ${S.ev}m primary${S.ev2?' / '+S.ev2+'m secondary':''} · ${S.dpw} days/week · peak ${S.peak} mi`;
+
+  const g0=weekGoal(ev,0), gN=weekGoal(ev,PLAN.nw-1);
+  document.getElementById('kpis').innerHTML=[
+    ['VDOT',`${PLAN.V0.toFixed(1)}→${PLAN.Vend.toFixed(1)}`],['Weeks',PLAN.nw],
+    [`${ev}m wk 1`,fmt(g0.t)],
+    [`${ev}m target`,fmt(gN.t)],
+    ['Projected gain','−'+fmt(Math.max(0,g0.t-gN.t))],
+    ['Peak volume',Math.max(...PLAN.weeks.map(w=>w.vol.mi))+' mi']
+  ].map(([l,v])=>`<div class="kpi"><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+
+  const stale=['800','1600','3200','5000'].filter(e=>S.prs[e]>0&&S.prs[e]<(e==='800'?PLAN.est800:equiv(+e,PLAN.V0))-1);
+  document.getElementById('vdotline').innerHTML=
+    `VDOT ${PLAN.V0.toFixed(1)} → <b>${PLAN.Vend.toFixed(1)}</b> projected by championship (+${PLAN.gain.toFixed(1)}), seeded from ${PLAN.seedD>=8000?'5K XC':PLAN.seedD+'m'} in ${fmt(PLAN.seedT)}.
+     Week-1 equivalents: 800 ${fmt(PLAN.est800)} · 1600 ${fmt(equiv(1600,PLAN.V0))} · 3200 ${fmt(equiv(3200,PLAN.V0))} · 5K ${fmt(equiv(5000,PLAN.V0))}.
+     ${stale.length?`<b style="color:var(--accent2)">Seed looks stale:</b> the ${stale.join(', ')} PR${stale.length>1?'s are':' is'} faster than this seed implies. Paces are anchored low — re-seed from the best recent race.`:''}`;
+
+  const defs=[['E','Easy','var(--e)','Aerobic base. 70–80% of weekly volume.'],
+    ['SUB','Sub-T','var(--sub)','LT1, ~2.0–2.5 mmol/L. Norwegian workhorse.'],
+    ['T','Threshold','var(--t)','~60-min race effort. Comfortably hard.'],
+    ['CV','Critical Vel','var(--cv)','~92–93% vVO₂max. Between T and I.'],
+    ['I','Interval','var(--i)','~3K–5K pace. Reps of 3–5 min.'],
+    ['R','Repetition','var(--r)','Mile-to-1500 pace. Economy and speed.']];
+  const W0=PLAN.weeks[0], WN=PLAN.weeks[PLAN.nw-1];
+  document.getElementById('paces').innerHTML=defs.map(([k,n,c,d])=>{
+    const isE=k==='E';
+    const v0=isE?easyV(W0.V,W0.hr):zoneV(W0.V,k,S.adj);
+    const vN=isE?easyV(WN.V,WN.hr):zoneV(WN.V,k,S.adj);
+    const user=PLAN.userPace[k]>0;
+    const drop=Math.round(secFor(v0,1609.344)-secFor(vN,1609.344));
+    return `<div class="p" style="border-left-color:${c}"><div class="k" style="color:${c}">${n}${user?' <span style="color:var(--accent2)">· yours</span>':''}${isE?' <span style="color:var(--e)">· HR</span>':''}</div>
+      <div class="v">${perMi(v0)}<span style="font-size:11px;color:var(--faint)">/mi</span></div>
+      <div class="s">→ ${perMi(vN)} by champs${drop>0?` (−${drop}s)`:''}</div><div class="d">${d}</div></div>`;}).join('');
+  const nUser=Object.keys(PLAN.userPace).length;
+  document.getElementById('paceadj').innerHTML='';
+
+  // aerobic pace model diagnostic
+  const h=W0.hr, rawE=vAt(PLAN.V0,PCT.E);
+  const gap=h?Math.round(secFor(h.vFast,1609.344)-secFor(rawE,1609.344)):0;
+  document.getElementById('hrbox').innerHTML = !h
+    ? `<div class="warn"><b>No heart rate set.</b> Easy pace is just an estimate with nothing checking it. Add your threshold HR in Setup.</div>`
+    : `<div class="note" style="border-left-color:var(--e)">
+      <b>Easy band <span class="mono">${perMi(h.vFast)} – ${perMi(h.vSlow)}/mi</span> at <span class="mono">${h.floor}–${h.cap} bpm</span></b>
+      &nbsp;<span style="color:var(--faint)">(cap from ${h.source})</span>
+      <br><br><b>Pace model:</b> ${h.model}.
+      ${h.full?`Pace is worked out from oxygen cost rather than a heart-rate ratio, and the curve is bent to pass through your own measured threshold instead of an average runner's. Full explanation in the How it works tab.`
+        :`<b style="color:var(--accent2)">Rougher estimate.</b> Without max HR and resting HR this uses a cruder method. Add both and it switches to the accurate model — resting HR alone shifts easy pace by 20+ s/mi.`}
+      <br><br><b>Cross-check:</b> the cap works out to <b>${(h.pct*100).toFixed(1)}% VO₂max</b>.
+      ${h.flag==='ok'?`That sits inside Daniels' easy range of ${(E_LO*100)|0}–${(E_HI*100)|0}%, so the pace math and the heart-rate math agree with each other. That is a good sign.`
+        :h.flag==='low'?`<b style="color:var(--accent2)">That is below Daniels' ${(E_LO*100)|0}–${(E_HI*100)|0}% easy range</b> — the cap may be too conservative to drive adaptation. Worth re-testing LTHR.`
+        :`<b style="color:var(--r)">That is above Daniels' ${(E_LO*100)|0}–${(E_HI*100)|0}% easy range</b> — this cap is not producing easy running. Re-check LTHR.`}
+      ${gap>0?` VDOT alone would have prescribed <span class="mono">${perMi(rawE)}/mi</span>, ${gap} s/mi faster.`:''}
+      <br><br><span style="color:var(--faint)">Workouts still go by pace. On reps under about two minutes your HR lags too far behind effort to chase.</span></div>`;
+
+  const asrPct=(PLAN.ASR/PLAN.vMax*100);
+  document.getElementById('asrbox').innerHTML= PLAN.ASR>0 ? `<div class="note">
+    <b>Anaerobic speed reserve: ${PLAN.ASR.toFixed(2)} m/s</b> (vVO₂max ${PLAN.vVO2.toFixed(2)} → max ${PLAN.vMax.toFixed(2)} m/s, ${asrPct.toFixed(0)}% reserve).
+    Plain aerobic math predicts your 800 at <span class="mono">${fmt(equiv(800,PLAN.V0))}</span>; adjusted for your speed it is <span class="mono">${fmt(PLAN.est800)}</span>.
+    ${PLAN.est800<equiv(800,PLAN.V0)-4?'You are speed-dominant. Your 800 is closer than the aerobic math suggests, so the plan leans toward aerobic support.'
+      :PLAN.est800>equiv(800,PLAN.V0)+4?'You are endurance-dominant. The plan leans toward speed and lactate tolerance to turn that aerobic fitness into 800 speed.'
+      :'Balanced profile — no adjustment needed.'}</div>`:'';
+
+  const pb=document.getElementById('phasebar'); const groups=[];
+  PLAN.weeks.forEach(w=>{const g=groups[groups.length-1]; if(g&&g.ph===w.phase.ph)g.n++;else groups.push({ph:w.phase.ph,name:w.phase.name,c:w.phase.c,n:1});});
+  pb.innerHTML=groups.map(g=>`<div style="flex:${g.n};background:${g.c}" title="${g.name}">${g.n>2?g.name.split(' · ')[0]:g.n}</div>`).join('');
+
+  const foci={0:'Aerobic volume, strides, durability',1:'Support system — strength / sub-T / CV',2:'Event-specific intensity',3:'Sharpen, taper, race'};
+  const mx=Math.max(...PLAN.weeks.map(x=>x.vol.mi));
+  document.getElementById('weeks').innerHTML=PLAN.weeks.map((w,i)=>{
+    const gl=weekGoal(ev,i), tv=zoneV(w.V,'T',S.adj);
+    const prog=w.vol.taper?'<span style="color:var(--r)">taper</span>':w.vol.down?'<span style="color:var(--accent2)">deload</span>':(w.step===0?'phase reset':'step '+(w.step+1));
+    return `<tr class="wk ${w.meet?'meetwk':''}" onclick="openWeek(${i})">
+      <td class="mono">${i+1}</td>
+      <td class="mono" style="color:var(--dim);font-size:12px">${w.ws.toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+      <td><span class="chip" style="background:${w.phase.c};color:#0c0a10">${w.phase.name.split(' · ')[0]}</span></td>
+      <td style="color:var(--dim);font-size:12.5px">${foci[w.phase.ph]}<br><span style="font-size:11px;color:var(--faint)">${prog}</span></td>
+      <td class="mono" style="font-size:12px">${w.V.toFixed(1)}<br><span style="color:var(--faint);font-size:11px">T ${perMi(tv)}</span></td>
+      <td class="mono" style="font-size:12px">${fmt(gl.t)}${gl.src==='PR floor'?'<br><span style="color:var(--accent2);font-size:10px">PR floor</span>':''}</td>
+      <td><div style="display:flex;align-items:center;gap:8px"><div class="bar" style="width:${w.vol.mi/mx*60}px"></div><span class="mono" style="font-size:12px">${w.vol.mi}</span></div></td>
+      <td>${w.meet?`<span class="chip" style="background:${w.meet.ty=='A'?'var(--r)':w.meet.ty=='B'?'var(--cv)':'var(--line)'};color:${w.meet.ty=='C'?'var(--dim)':'#0c0a10'}">${w.meet.ty}</span> <span style="font-size:11.5px;color:var(--dim)">${w.meet.nm||'Meet'}</span>`:''}</td>
+    </tr>`;}).join('');
+  ['n2','n3','n4'].forEach(id=>document.getElementById(id).disabled=false);
+}
+
+let WEEK=null;
+function openWeek(i){
+  curWeek=i; const w=PLAN.weeks[i]; WEEK=buildWeek(i);
+  document.getElementById('s3h').textContent=`Week ${i+1} — ${w.phase.name}`;
+  document.getElementById('s3sub').textContent=`${w.ws.toLocaleDateString('en-US',{month:'long',day:'numeric'})} – ${w.we.toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${w.vol.mi} mi target · ${METHODS[S.method].n}`;
+  const warn=[];
+  if(w.vol.down)warn.push('<b>Down week.</b> Mileage cut about 22% and one workout removed. You get fitter during these weeks, not during the hard ones. Do not add anything back.');
+  if(w.meet&&w.meet.ty==='A')warn.push('<b>Championship week.</b> About 55% of peak mileage and one sharpener. Fresh legs beat fit legs. Do not add work.');
+  if(w.meet&&w.meet.ty==='C')warn.push('<b>Train-through meet.</b> The race counts as this week\'s workout — one session was already removed rather than stacking both.');
+  if(S.method==='double'&&w.phase.ph===2)warn.push('<b>Double threshold week.</b> Two sessions the same day. If the evening one feels harder than the morning one, you ran the morning too fast.');
+  document.getElementById('weekwarn').innerHTML=warn.length?`<div class="warn">${warn.join('<br><br>')}</div>`:'';
+
+  const col={t:'var(--t)',i:'var(--i)',r:'var(--r)',cv:'var(--cv)',sub:'var(--sub)'};
+  document.getElementById('days').innerHTML=WEEK.map((d,j)=>{
+    if(d.type==='rest')return `<div class="day rest"><div class="dn">${d.d}</div><div class="tt">Rest</div><div class="dd">Full day off</div></div>`;
+    const clickable=d.type==='q'||d.type==='race';
+    return `<div class="day ${clickable?'q':''}" ${clickable?`onclick="openWorkout(${j})"`:''}
+      ${d.tag?`style="border-left-color:${col[d.tag]}"`:d.type==='race'?'style="border-left:3px solid var(--r)"':''}>
+      <div class="dn">${d.d}${d.sess&&d.sess.ampm?' · '+d.sess.ampm:''}</div>
+      <div class="tt">${d.title}</div><div class="dd">${d.sub||''}</div>
+      <div class="dd" style="color:var(--faint)">${d.detail||''}</div>
+      <div class="mi">${d.mi||0} mi${clickable?' · tap for splits →':''}</div></div>`;
+  }).join('');
+  go(3);
+}
+
+function openWorkout(j){
+  const d=WEEK[j], w=PLAN.weeks[curWeek], V=w.V, hr=w.hr; curDay=j;
+  document.getElementById('s4h').textContent=d.title;
+  document.getElementById('s4sub').textContent=`Week ${curWeek+1} · ${d.d} · ${w.phase.name} · VDOT ${V.toFixed(1)}`;
+  const P={}; for(const k in PCT) P[k]=zoneV(V,k,S.adj);
+  P.E=easyV(V,hr);                                     // warm-up / cool-down jog is an aerobic day too
+
+  if(d.type==='race'){
+    const gl=weekGoal(S.ev,curWeek), goal=gl.t;
+    const g0=weekGoal(S.ev,0);
+    const laps=Math.round(+S.ev/400);
+    document.getElementById('wkpis').innerHTML=`<div class="kpi"><div class="l">Event</div><div class="v">${S.ev}m</div></div>
+      <div class="kpi"><div class="l">Goal</div><div class="v">${fmt(goal)}</div></div>
+      <div class="kpi"><div class="l">vs week 1</div><div class="v">${goal<g0.t?'−'+fmt1(g0.t-goal):'—'}</div></div>
+      <div class="kpi"><div class="l">Avg 400</div><div class="v">${fmt1(goal/(+S.ev/400))}</div></div>
+      <div class="kpi"><div class="l">Basis</div><div class="v" style="font-size:12px">${gl.src}</div></div>`;
+    // negative-split split targets
+    const splits=[]; const avg=goal/laps;
+    for(let i=0;i<laps;i++){ const f=i===0?0.985:(i===laps-1?0.985:1.012); splits.push(avg*f); }
+    const scale=goal/splits.reduce((a,b)=>a+b,0); let cum=0;
+    document.getElementById('wbody').innerHTML=`
+      <div class="seg"><h5>Lap targets — controlled first lap, then close</h5>
+      ${splits.map((s,i)=>{cum+=s*scale;return `<div class="rep"><span class="n">${(i+1)*400}m</span>
+        <span>Lap ${i+1}${i===0?' — do not chase the field':i===laps-1?' — bell lap':''}</span>
+        <span class="tgt">${fmt1(s*scale)}</span><span class="rst">${fmt(cum)}</span></div>`}).join('')}</div>
+      <div class="note"><b>How to run it.</b> The most common mistake in the ${S.ev} is a first lap 2–4 seconds too fast, which costs you 4–8 seconds over the back half. Going out controlled is the single biggest thing you control on race day.</div>
+      <div class="note" style="margin-top:11px;border-left-color:var(--e)"><b>Where this goal came from.</b>
+      ${gl.src==='PR floor'
+        ? `Your projected fitness this week would suggest something slower than you have already run, so the goal is held at your <b>${fmt(gl.pr)}</b> PR. You will never be shown a goal slower than your own PR.`
+        : `Projected from your week ${curWeek+1} fitness (VDOT ${V.toFixed(1)}), not from where you started. It gets faster each week as your projected fitness rises${gl.pr?`, and is floored at the ${fmt(gl.pr)} PR`:''}.`}
+      </div>`;
+    go(4); return;
+  }
+
+  const wu=wuMiles(w.vol.mi);
+
+  if(d.sess && d.sess.double){
+    const am=sessionBlock(d.sess.am,wu,P,hr,'Morning session · AM');
+    const pm=sessionBlock(d.sess.pm,wu,P,hr,'Evening session · PM');
+    document.getElementById('wkpis').innerHTML=`
+      <div class="kpi"><div class="l">Sessions</div><div class="v" style="font-size:14px">AM + PM</div></div>
+      <div class="kpi"><div class="l">Day quality vol</div><div class="v">${(am.mi+pm.mi).toFixed(1)}mi</div></div>
+      <div class="kpi"><div class="l">Day total time</div><div class="v">${fmt(am.sec+pm.sec)}</div></div>
+      <div class="kpi"><div class="l">Gap between</div><div class="v" style="font-size:13px">6+ hrs</div></div>`;
+    document.getElementById('wbody').innerHTML=am.html+pm.html+
+      `<div class="note" style="margin-top:11px">${d.sess.note}</div>`;
+    go(4); return;
+  }
+
+  const s=d.sess, blk=sessionBlock(s,wu,P,hr,'');
+  const zone={t:'Threshold',i:'VO₂max',r:'Repetition',cv:'Critical velocity',sub:'Sub-threshold (LT1)'}[s.tag];
+  const lac={t:'3.0–4.0 mmol/L',i:'>5 mmol/L',r:'n/a — neural',cv:'2.5–3.5 mmol/L',sub:'2.0–2.5 mmol/L'}[s.tag];
+  document.getElementById('wkpis').innerHTML=`
+    <div class="kpi"><div class="l">Zone</div><div class="v" style="font-size:14px">${zone}</div></div>
+    <div class="kpi"><div class="l">Quality vol</div><div class="v">${blk.mi.toFixed(1)}mi</div></div>
+    <div class="kpi"><div class="l">Session time</div><div class="v">${fmt(blk.sec)}</div></div>
+    <div class="kpi"><div class="l">Blood lactate</div><div class="v" style="font-size:13px">${lac}</div></div>`;
+  document.getElementById('wbody').innerHTML=blk.html;
+  go(4);
+}
+
+/* one quality session's HTML + stats — shared by the single-session view and the
+   double-threshold day, which renders two of these back to back (AM, then PM) */
+function sessionBlock(s,wu,P,hr,laneLabel){
+  const totalM=s.sets.reduce((a,r)=>a+r.n*r.dist,0);
+  const totalT=s.sets.reduce((a,r)=>a+r.n*(r.tgt+r.rest),0);
+  const sec=totalT+secFor(P.E,wu*1609.344)*2+8*60;
+  const label=r=>r.dist>=1600&&r.dist%1600===0?`${r.dist/1600} mile`:`${r.dist}m`;
+  const html=`
+    ${laneLabel?`<h3 style="margin:26px 0 8px">${laneLabel}</h3>`:''}
+    <div class="seg"><h5>Warm-up</h5>
+      <div class="rep"><span class="n">1</span><span>${wu.toFixed(1)} mi easy jog</span><span class="tgt">${hr?perMi(hr.vMid):perMi(P.E)}/mi</span><span class="rst">${hr?'≤'+hr.cap+' bpm':''}</span></div>
+      <div class="rep"><span class="n">2</span><span>Dynamic drills — A-skip, B-skip, high knees, butt kicks</span><span class="tgt">8 min</span><span class="rst"></span></div>
+      <div class="rep"><span class="n">3</span><span>4 × 100m strides, building</span><span class="tgt">${fmt1(secFor(P.R,100))}</span><span class="rst">walk back</span></div>
+    </div>
+    ${s.sets.map((r,k)=>`<div class="seg">
+      <h5>Main set ${s.sets.length>1?k+1:''} — ${r.n>1?r.n+' × ':''}${label(r)} @ ${r.label}
+        ${r.prog&&r.prog!=='baseline'?`<span style="float:right;color:var(--accent2);text-transform:none;letter-spacing:0">${r.prog} vs. phase start</span>`:''}</h5>
+      ${Array.from({length:Math.min(r.n,30)},(_,i)=>`<div class="rep">
+        <span class="n">${i+1}</span>
+        <span>${label(r)}${r.dist>=800?` <span style="color:var(--faint);font-size:11.5px">(${fmt1(r.tgt/(r.dist/400))}/400 pace)</span>`:''}</span>
+        <span class="tgt">${fmt1(r.tgt)}</span>
+        <span class="rst">${r.rest?(r.rest>=60?fmt(r.rest):r.rest+'s')+' rest':'—'}</span></div>`).join('')}
+    </div>`).join('')}
+    <div class="seg"><h5>Cool-down</h5>
+      <div class="rep"><span class="n">1</span><span>${wu.toFixed(1)} mi easy jog</span><span class="tgt">${perMi(P.E)}/mi</span><span class="rst"></span></div></div>
+    ${s.note?`<div class="note"><b>Purpose.</b> ${s.note}</div>`:''}
+    <div class="note" style="margin-top:11px;border-left-color:var(--r)"><b>When to stop.</b> If a rep falls more than ${s.tag==='r'?'2%':'3%'} off target pace, the workout is over. Grinding out reps once you have fallen off trains the wrong thing and costs you the next session too. Stopping early is the disciplined choice, not the soft one.</div>`;
+  return {html,mi:totalM/1609.344,sec};
+}
+
+/* ============ NAV ============ */
+function go(n){[1,2,3,4,5].forEach(i=>{document.getElementById('s'+i).classList.toggle('hide',i!==n);
+  document.getElementById('n'+i).classList.toggle('on',i===n);});window.scrollTo(0,0);}
+
+/* ============ INIT ============ */
+(function(){
+  const t=new Date(); document.getElementById('start').value=t.toISOString().slice(0,10);
+  const d=n=>{const x=new Date(t);x.setDate(x.getDate()+n);return x.toISOString().slice(0,10);};
+  addMeet('Season opener',d(21),'C'); addMeet('Invitational',d(42),'C');
+  addMeet('Conference',d(70),'B'); addMeet('State Championship',d(91),'A');
+  ['vol','dpw'].forEach(id=>document.getElementById(id).addEventListener('input',drawMethods));
+  ['lthr','hrmax','hrrest','hrcap','seedT','seedD'].forEach(id=>{
+    const el=document.getElementById(id); el.addEventListener('input',drawHR); el.addEventListener('change',drawHR);});
+  drawHR();
+  document.getElementById('ev').addEventListener('change',e=>{
+    document.getElementById('evHint').textContent={
+      '800':'Weighted toward your speed. Aerobic math alone gets the 800 wrong.',
+      '1600':'Balanced — your distance race and your sprint both matter here.',
+      '3200':'Mostly aerobic, with speed kept in for economy.',
+      '5000':'Mostly aerobic. The most straightforward one to plan for.'}[e.target.value];});
+  document.getElementById('ev').dispatchEvent(new Event('change'));
+  drawMethods();
+})();
+</script>
+</body>
+</html>
