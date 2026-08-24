@@ -54,7 +54,8 @@ input:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
 .phasebar{display:flex;height:34px;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin:14px 0 6px}
 .phasebar div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;letter-spacing:.5px;color:#0c0a10;text-transform:uppercase;overflow:hidden;white-space:nowrap}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);padding:8px 9px;border-bottom:1px solid var(--line)}
+.tablewrap{max-height:520px;overflow:auto;-webkit-overflow-scrolling:touch;margin-top:12px}
+th{text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);padding:8px 9px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:9px;border-bottom:1px solid #291f35;vertical-align:middle}
 tr.wk{cursor:pointer}
 tr.wk:hover td{background:var(--panel2)}
@@ -88,6 +89,32 @@ tr.meetwk td{background:#1f1728}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
 @media(max-width:760px){.two,.three{grid-template-columns:1fr}.meetrow{grid-template-columns:1fr 1fr}.rep{grid-template-columns:26px 1fr 74px 74px;gap:6px;font-size:12.5px}}
+
+/* ---- phone pass (375-430px class devices) ----
+   Fixes: iOS auto-zoom on form focus (inputs need >=16px), nav/button tap
+   targets under ~44px, the data table's fixed columns getting squeezed
+   illegibly instead of scrolling, and a floated progression badge that can
+   crowd a workout-set heading at narrow widths. */
+@media(max-width:600px){
+  .wrap{padding:0 14px 90px}
+  .hrow{padding:11px 14px;gap:10px}
+  input,select{font-size:16px;padding:12px 11px}       /* 16px stops mobile Safari zooming on focus */
+  nav button{padding:13px 12px;min-height:44px}
+  .btn{padding:15px 20px}
+  .btn.ghost{padding:12px 16px;font-size:13.5px;min-height:44px}
+  .back{padding:12px 0;min-height:44px;display:inline-flex;align-items:center}
+  .x{min-height:44px;height:44px}
+  .meetrow{row-gap:8px}
+  .meetrow .x{width:52px;justify-self:end}
+  table{min-width:660px}
+  th,td{padding:8px 7px}
+  .day{padding:14px;min-height:118px}
+  .kpi,.p{padding:12px}
+  label{font-size:11.5px}
+  .chip{font-size:10.5px;padding:3px 8px}
+  .seg h5{padding:10px 12px;line-height:1.5}
+  .seg h5 span{float:none!important;display:block!important;margin-top:4px}
+}
 .back{background:none;border:0;color:var(--dim);cursor:pointer;font:600 13px/1 inherit;padding:0;margin:22px 0 0}
 .doc{max-width:760px}
 .doc p{color:var(--dim);font-size:14px}
@@ -272,7 +299,7 @@ tr.meetwk td{background:#1f1728}
     <h4 style="margin:0 0 2px;font-size:14px">Your season, week by week</h4>
     <p class="hint" style="margin:0">Tap any week to see the actual workouts. Notice the goal times drop and the workouts grow — that's the plan progressing, not just repeating.</p>
     <div class="phasebar" id="phasebar"></div>
-    <div style="max-height:520px;overflow:auto;margin-top:12px">
+    <div class="tablewrap">
       <table><thead><tr><th style="width:40px">Wk</th><th style="width:74px">Date</th><th>Phase</th><th>Focus / progression</th><th style="width:78px">VDOT</th><th style="width:74px">Goal</th><th style="width:110px">Volume</th><th style="width:124px">Meet</th></tr></thead>
       <tbody id="weeks"></tbody></table>
     </div>
@@ -816,13 +843,13 @@ function buildWeek(wi){
   if(easyIdx.length){
     const lr = easyIdx.includes(6)?6:(easyIdx.includes(5)?5:easyIdx[easyIdx.length-1]);
     // long runs: hold the HR cap and let pace decay — cardiac drift is expected, not a failure
-    const lrMiles=Math.round(mi*0.22);
+    const lrMiles=Math.max(3,Math.round(mi*0.22));
     days[lr]={d:names[lr],type:'long',title:'Long run',
       sub:hr?`${lrMiles} mi · open ${perMi(hr.vMid)}, close ${perMi(hr.vSlow*0.97)}`:`${lrMiles} mi @ ${perMi(P.E)}/mi`,
       detail:hr?`Hold ≤ ${hr.cap} bpm — pace decays, that's the point`:'Steady aerobic effort'};
   }
   // distribute mileage, then reconcile rounding drift against the weekly target
-  const qMi=Math.round(mi*0.16), lrMi=Math.round(mi*0.22);
+  const qMi=Math.round(mi*0.16), lrMi=Math.max(3,Math.round(mi*0.22));
   let used=0, cnt=0;
   days.forEach(d=>{
     if(d.type==='q'){
