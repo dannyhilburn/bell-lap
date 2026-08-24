@@ -879,6 +879,30 @@ function buildWeek(wi){
   return days;
 }
 
+/* ============ CLOUD SETTINGS BRIDGE ============
+   Small window-level bridge so the Firebase/Firestore module script (which
+   runs in its own module scope) can save/restore Setup-page state without
+   this classic script needing to know anything about Firebase. */
+const CLOUD_FIELD_IDS=['ev','ev2','dpw','seedD','seedT','spD','spT','vol','peak','start','maxSess',
+  'lthr','hrmax','hrrest','hrcap','pSUB','pT','pI','pR','pUnit',
+  'pr800','pr1600','pr3200','pr5000','tage'];
+window.collectSettings=function(){
+  const data={};
+  CLOUD_FIELD_IDS.forEach(id=>{const el=document.getElementById(id); if(el) data[id]=el.value;});
+  data.method=method;
+  data.meets=meets;
+  return data;
+};
+window.applySettings=function(data){
+  if(!data) return;
+  CLOUD_FIELD_IDS.forEach(id=>{
+    if(data[id]!==undefined){const el=document.getElementById(id); if(el) el.value=data[id];}
+  });
+  if(data.method && METHODS[data.method]) method=data.method;
+  if(Array.isArray(data.meets)) meets=data.meets;
+  drawMethods(); drawMeets(); drawHR();
+};
+
 /* ============ BUILD ============ */
 function build(){
   const g=id=>document.getElementById(id).value;
@@ -929,6 +953,7 @@ function build(){
         Vend:weeks[nw-1].V};
 
   renderSeason(); go(2);
+  if(window.__onSeasonBuilt) window.__onSeasonBuilt();
 }
 
 /* ============ RENDER ============ */
@@ -1161,14 +1186,19 @@ function go(n){[1,2,3,4,5].forEach(i=>{document.getElementById('s'+i).classList.
 })();
 </script>
 
-<!-- ---- Google sign-in (Firebase Auth) ----
-     Identity only, phase 1 of the roadmap's "Secure login" item. No backend
-     data persistence — check-off/progress tracking is a separate future
-     roadmap item. Signed-in state never gates existing app functionality. -->
+<!-- ---- Google sign-in (Firebase Auth) + saved settings (Firestore) ----
+     Phase 2 of the roadmap's "Secure login" item. Signing in now saves your
+     Setup-page inputs to Firestore (one document per athlete, keyed by uid,
+     locked down by security rules so only that athlete can read/write it)
+     and reloads them the next time you sign in. Season/week/workout data
+     itself is still generated fresh each time, not persisted. Signed-in
+     state never gates existing app functionality. -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCZVO1zpG4DP-Pb5PqjnWWb-TzuTrvZcZ8",
@@ -1181,6 +1211,7 @@ const firebaseConfig = {
 
 const authApp = initializeApp(firebaseConfig);
 const auth = getAuth(authApp);
+const db = getFirestore(authApp);
 const googleProvider = new GoogleAuthProvider();
 const authWidget = document.getElementById('authWidget');
 
@@ -1252,8 +1283,45 @@ async function doSignOut(){
   }
 }
 
+/* ---- saved settings (Firestore) ----
+   One document per athlete at athletes/{uid}, holding their Setup-page
+   inputs. collectSettings()/applySettings() live on window, defined by the
+   main app script — this module never touches form fields directly. */
+async function saveSettingsToCloud(){
+  if(!auth.currentUser || !window.collectSettings) return;
+  try{
+    await setDoc(doc(db, 'athletes', auth.currentUser.uid), {
+      settings: window.collectSettings(),
+      updatedAt: serverTimestamp()
+    }, {merge: true});
+    showAuthMsg('Settings saved');
+  }catch(err){
+    console.warn('Settings save failed:', err && err.code ? err.code : err);
+    showAuthMsg('Save failed — try again');
+  }
+}
+
+async function loadSettingsFromCloud(uid){
+  if(!window.applySettings) return;
+  try{
+    const snap = await getDoc(doc(db, 'athletes', uid));
+    if(snap.exists() && snap.data().settings){
+      window.applySettings(snap.data().settings);
+      showAuthMsg('Loaded your saved settings — Build my season to regenerate your plan');
+    }
+  }catch(err){
+    console.warn('Settings load failed:', err && err.code ? err.code : err);
+  }
+}
+
+// build() (main app script) calls this after every successful season build
+window.__onSeasonBuilt = function(){
+  if(auth.currentUser) saveSettingsToCloud();
+};
+
 onAuthStateChanged(auth, (user)=>{
-  if(user) renderSignedIn(user); else renderSignedOut();
+  if(user){ renderSignedIn(user); loadSettingsFromCloud(user.uid); }
+  else renderSignedOut();
 });
 </script>
 </body>
