@@ -24,6 +24,12 @@ nav{margin-left:auto;display:flex;gap:2px;background:var(--panel);padding:3px;bo
 nav button{background:none;border:0;color:var(--dim);font:600 13px/1 inherit;padding:8px 12px;border-radius:7px;cursor:pointer}
 nav button.on{background:var(--accent);color:#fff}
 nav button:disabled{opacity:.35;cursor:not-allowed}
+#authWidget{display:flex;align-items:center;gap:8px;margin-left:8px}
+.auth-btn{padding:8px 14px;font-size:12.5px;white-space:nowrap}
+.auth-user{display:flex;align-items:center;gap:8px}
+.auth-avatar{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);display:block}
+.auth-name{font-size:12.5px;color:var(--dim);font-weight:600;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.auth-msg{font-size:11px;color:var(--faint)}
 h2{font-size:22px;margin:28px 0 4px;letter-spacing:-.4px}
 h3{font-size:17px;margin:26px 0 8px;letter-spacing:-.3px}
 .sub{color:var(--dim);font-size:13.5px;margin:0 0 18px}
@@ -114,6 +120,7 @@ tr.meetwk td{background:#1f1728}
   .chip{font-size:10.5px;padding:3px 8px}
   .seg h5{padding:10px 12px;line-height:1.5}
   .seg h5 span{float:none!important;display:block!important;margin-top:4px}
+  .auth-name{max-width:76px}
 }
 .back{background:none;border:0;color:var(--dim);cursor:pointer;font:600 13px/1 inherit;padding:0;margin:22px 0 0}
 .doc{max-width:760px}
@@ -136,6 +143,7 @@ tr.meetwk td{background:#1f1728}
     <button id="n4" onclick="go(4)" disabled>Workout</button>
     <button id="n5" onclick="go(5)">How it works</button>
   </nav>
+  <div id="authWidget"></div>
 </div></header>
 
 <div class="wrap">
@@ -1151,6 +1159,102 @@ function go(n){[1,2,3,4,5].forEach(i=>{document.getElementById('s'+i).classList.
   document.getElementById('ev').dispatchEvent(new Event('change'));
   drawMethods();
 })();
+</script>
+
+<!-- ---- Google sign-in (Firebase Auth) ----
+     Identity only, phase 1 of the roadmap's "Secure login" item. No backend
+     data persistence — check-off/progress tracking is a separate future
+     roadmap item. Signed-in state never gates existing app functionality. -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCZVO1zpG4DP-Pb5PqjnWWb-TzuTrvZcZ8",
+  authDomain: "bell-lap-a44c7.firebaseapp.com",
+  projectId: "bell-lap-a44c7",
+  storageBucket: "bell-lap-a44c7.firebasestorage.app",
+  messagingSenderId: "984344933633",
+  appId: "1:984344933633:web:037307ef75cdbfb8e31700"
+};
+
+const authApp = initializeApp(firebaseConfig);
+const auth = getAuth(authApp);
+const googleProvider = new GoogleAuthProvider();
+const authWidget = document.getElementById('authWidget');
+
+function mkEl(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text !== undefined) e.textContent = text;
+  return e;
+}
+
+function renderSignedOut(){
+  authWidget.innerHTML = '';
+  const btn = mkEl('button', 'btn ghost auth-btn', 'Sign in with Google');
+  btn.type = 'button';
+  btn.addEventListener('click', doSignIn);
+  authWidget.appendChild(btn);
+}
+
+function renderSignedIn(user){
+  authWidget.innerHTML = '';
+  const wrap = mkEl('div', 'auth-user');
+  if(user.photoURL){
+    const img = document.createElement('img');
+    img.src = user.photoURL; img.alt = ''; img.className = 'auth-avatar'; img.referrerPolicy = 'no-referrer';
+    wrap.appendChild(img);
+  }
+  wrap.appendChild(mkEl('span', 'auth-name', user.displayName || user.email || 'Signed in'));
+  const btn = mkEl('button', 'btn ghost auth-btn', 'Sign out');
+  btn.type = 'button';
+  btn.addEventListener('click', doSignOut);
+  wrap.appendChild(btn);
+  authWidget.appendChild(wrap);
+}
+
+let authMsgTimer = null;
+function showAuthMsg(text){
+  let m = document.getElementById('authMsg');
+  if(!m){
+    m = mkEl('div', 'auth-msg');
+    m.id = 'authMsg';
+    authWidget.appendChild(m);
+  }
+  m.textContent = text;
+  clearTimeout(authMsgTimer);
+  authMsgTimer = setTimeout(()=>{ if(m && m.parentNode) m.remove(); }, 4000);
+}
+
+async function doSignIn(){
+  try{
+    await signInWithPopup(auth, googleProvider);
+  }catch(err){
+    const code = err && err.code ? err.code : 'unknown';
+    if(code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request'){
+      // user closed/cancelled the popup — nothing to report
+    }else if(code === 'auth/popup-blocked'){
+      showAuthMsg('Popup blocked — allow popups for this site to sign in.');
+    }else{
+      console.warn('Google sign-in failed:', code);
+      showAuthMsg('Sign-in failed. Try again.');
+    }
+  }
+}
+
+async function doSignOut(){
+  try{
+    await signOut(auth);
+  }catch(err){
+    console.warn('Sign-out failed:', err && err.code ? err.code : err);
+  }
+}
+
+onAuthStateChanged(auth, (user)=>{
+  if(user) renderSignedIn(user); else renderSignedOut();
+});
 </script>
 </body>
 </html>
